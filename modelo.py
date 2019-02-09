@@ -3,49 +3,39 @@ import speech_recognition as sr
 from datetime import date
 
 def recognize_speech_from_mic(recognizer, microphone):
-    """Transcribe speech from recorded from `microphone`.
+    """Transcribe la voz tomada desde el microfono.
 
-    Returns a dictionary with three keys:
-    "success": a boolean indicating whether or not the API request was
-               successful
-    "error":   `None` if no error occured, otherwise a string containing
-               an error message if the API could not be reached or
-               speech was unrecognizable
-    "transcription": `None` if speech could not be transcribed,
-               otherwise a string containing the transcribed text
+    Retorna un diccionario con las siguientes tres claves:
+
+    "success":          Un Booleano que indica si la respuesta de la API fue satisfactoria.
+    "error":            Contiene el mesaje de error, este es None si no ocurrió ningun error.
+    "transcription":    Contiene el texto transcrito, este es None si no pudo ser transcrito.
     """
-    # check that recognizer and microphone arguments are appropriate type
-    if not isinstance(recognizer, sr.Recognizer):
-        raise TypeError("`recognizer` must be `Recognizer` instance")
 
-    if not isinstance(microphone, sr.Microphone):
-        raise TypeError("`microphone` must be `Microphone` instance")
-
-    # adjust the recognizer sensitivity to ambient noise and record audio
-    # from the microphone
+    # Toma el audio desde el microfono en un intervalo de 5 segundos, teniendo en cuenta el ruido de ambiente
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
-        audio = recognizer.listen(source)
+        audio = recognizer.listen(source,phrase_time_limit=5)
+        print("Reconociendo")
 
-    # set up the response object
+    # Diccionario que es retornado como respuesta
     response = {
         "success": True,
         "error": None,
         "transcription": None
     }
 
-    # try recognizing the speech in the recording
-    # if a RequestError or UnknownValueError exception is caught,
-    #     update the response object accordingly
+    #Se utiliza la API de google para pasar de la voz tomada desde el microfono a texto
+    print("Reconociendo")
     try:
-        response["transcription"] = recognizer.recognize_google(audio)
+        response["transcription"] = recognizer.recognize_google(audio, language='es-CO')
     except sr.RequestError:
-        # API was unreachable or unresponsive
+        # La API no responde
         response["success"] = False
-        response["error"] = "API unavailable"
+        response["error"] = "API no disponible"
     except sr.UnknownValueError:
-        # speech was unintelligible
-        response["error"] = "Unable to recognize speech"
+        # No se logro reconocer la que se dijo
+        response["error"] = "Imposible reconocer lo que quiere decir"
 
     return response
 
@@ -56,12 +46,13 @@ if __name__=="__main__":
     r = sr.Recognizer()
     mic = sr.Microphone()
 
-    print("Say Something!")
-    prueba = recognize_speech_from_mic(r,mic)
-    if prueba["success"]:
-        if prueba["error"]:
-            print(prueba["error"])
+    while(True):
+        print("Say Something!")
+        prueba = recognize_speech_from_mic(r,mic)
+        if prueba["success"]:
+            if prueba["error"]:
+                print(prueba["error"])
+            else:
+                print("You said: "+prueba["transcription"])
         else:
-            print("You said: "+prueba["transcription"])
-    else:
-        print("I dont understand")
+            print("I dont understand")
