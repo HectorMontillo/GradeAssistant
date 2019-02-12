@@ -1,55 +1,78 @@
-from peewee import *
+import peewee
 
-database = SqliteDatabase('DATABASE')
+db = peewee.SqliteDatabase('Aplicacion.db')
 
-class BaseModel(Model):
+class Usuarios(peewee.Model):
+    Cedula_Usuario = peewee.IntegerField(primary_key=True)
+    Contrasena = peewee.CharField()
     class Meta:
-        database = database
+        database=db
+        db_table='usuarios'
 
-class Usuarios(BaseModel):
-    Cedula_Usuario = IntegerField(primary_key =True)
-    Contrasena = CharField()
+class Estudiantes(peewee.Model):
+    ID_Estudiante = peewee.IntegerField(primary_key =True)
+    Nombre = peewee.CharField()
+    class Meta:
+        database=db
+        db_table = 'estudiantes'
 
-class Grupos(BaseModel):
-    ID_Grupo = IntegerField(primary_key =True)
-    Nombre = CharField()
-    Materia = CharField()
-    Cedula_Usuario = ForeignKeyField(Usuarios, backref='cedula_usuario')
+class Grupos(peewee.Model):
+    ID_Grupo = peewee.IntegerField(primary_key =True)
+    Nombre = peewee.CharField()
+    Materia = peewee.CharField()
+    Cedula_Usuario = peewee.ForeignKeyField(Usuarios, backref='cedula_usuario')
+    class Meta:
+        database=db
+        db_table = 'grupos'
 
-class Estudiantes(BaseModel):
-    ID_Estudiante = IntegerField(primary_key =True)
-    Nombre = CharField()
+class GrupoEstudiante(peewee.Model):
+    ID_GrupoEstudiante = peewee.IntegerField(primary_key =True)
+    ID_Estudiante = peewee.ForeignKeyField(Estudiantes, backref='id_estudiante')
+    ID_Grupo = peewee.ForeignKeyField(Grupos, backref='id_grupo')
+    class Meta:
+        database=db
+        db_table = 'grupo_estudiantes'
 
-class GrupoEstudiante(BaseModel):
-    ID_GrupoEstudiante = IntegerField(primary_key =True)
-    ID_Estudiante = ForeignKeyField(Estudiantes, backref='id_estudiante')
-    ID_Grupo = ForeignKeyField(Grupos, backref='id_grupo')
+class Asistencias(peewee.Model):
+    ID_Asistencia = peewee.IntegerField(primary_key =True)
+    Dia = peewee.IntegerField()
+    Valor = peewee.BooleanField()
+    ID_Estudiante = peewee.ForeignKeyField(Estudiantes, backref='id_estudiante')
+    class Meta:
+        database=db
+        db_table = 'asistencias'
 
-class Asistencias(BaseModel):
-    ID_Asistencia = IntegerField(primary_key =True)
-    Dia = IntegerField()
-    Valor = BooleanField()
-    ID_Estudiante = ForeignKeyField(Estudiantes, backref='id_estudiante')
+class Calificaciones(peewee.Model):
+    ID_Calificaion = peewee.IntegerField(primary_key =True)
+    Nombre = peewee.CharField()
+    Valor = peewee.FloatField()
+    ID_Estudiante = peewee.ForeignKeyField(Estudiantes,backref='id_estudiante')
+    class Meta:
+        database=db
+        db_table = 'calificaciones'
 
-class Calificaciones(BaseModel):
-    ID_Calificaion = IntegerField(primary_key =True)
-    Nombre = CharField()
-    Valor = FloatField()
-    ID_Estudiante = ForeignKeyField(Estudiantes,backref='id_estudiante')
 
-def InizialarBD():
-    #database.connect()
-    database.create_tables([Usuarios, Grupos, Estudiantes, GrupoEstudiante, Asistencias, Calificaciones])
+db.create_tables([Usuarios, Estudiantes, Grupos, GrupoEstudiante, Asistencias, Calificaciones])
+
+def Registrar(Usuario,Contrasena):
+    try:
+        Usuarios.create(Cedula_Usuario=Usuario,Contrasena = Contrasena)
+        return 1
+    except:
+        print("An exception occurred")
+        return 0
+
+def Ingresar(Usuario, Contrasena):
+    return Usuarios.select().where(Usuarios.Cedula_Usuario == Usuario and Usuarios.Contrasena == Contrasena)
+
 
 
 if __name__=="__main__":
-    InizialarBD()
-    #database.connect()
-    Saulo = Usuarios(Cedula_Usuario=123,Contrasena='123')
-    Saulo.save()
+    #usuario1 = Usuarios.create(Cedula_Usuario=1234567890,Contrasena = 'qwerty')
+    #Saulo.save()
     #Angel = Usuarios.create(124,123)
 
     query = Usuarios.select()
     for i in query:
         print(i)
-
+    print("Finalizo")

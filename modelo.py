@@ -1,6 +1,5 @@
 import speech_recognition as sr
-
-from datetime import date
+import bd 
 
 def recognize_speech_from_mic(recognizer, microphone):
     """Transcribe la voz tomada desde el microfono.
@@ -38,6 +37,7 @@ def recognize_speech_from_mic(recognizer, microphone):
         response["error"] = "Imposible reconocer lo que quiere decir"
 
     return response
+
 
 
 

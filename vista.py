@@ -2,6 +2,7 @@
 import wx
 import constantes as c
 import modelo as m
+import bd
 
 class Login(wx.Frame):
     def __init__(self, parent, id):
@@ -34,10 +35,73 @@ class Login(wx.Frame):
         self.TFContrasena = wx.TextCtrl(panel, id=wx.ID_ANY, value="", pos=(112, 136), size=(c.ANCHO-176, -1), style=wx.TE_PASSWORD)
 
         self.BtnIngresar = wx.Button(panel, label="Ingresar", pos=(c.ANCHO-160, 168), size=(96, 32))
+        self.Bind(wx.EVT_BUTTON, self.Ingresar, self.BtnIngresar)
         self.BtnRegistrar = wx.Button(panel, label="Registrarse", pos=(c.ANCHO-272, 168), size=(96, 32))
+        self.Bind(wx.EVT_BUTTON, self.Registrar, self.BtnRegistrar)
 
-        #self.BtnPrueba = wx.Button(self.Panel, label="Prueba", pos=(32, 32), size=(96, 32))
-        #self.Bind(wx.EVT_BUTTON, self.tratamiento, self.BtnPrueba)
+        #Alertas-------------------------------
+        self.MDError = wx.MessageDialog(self,"Default")
+
+        #Frames---------------------------------
+        self.IndexFrame = Index(self, -1)
+
+
+
+
+    def Ingresar(self,event):
+        Error = ["Usuario o contrasena incorrecta","Debe llenar ambos campos"]
+        Usuario = self.TFUsuario.GetValue()
+        Contrasena = self.TFContrasena.GetValue()
+
+        if Usuario == "" or Contrasena == "":
+            self.MDError.SetMessage(Error[1])
+            self.MDError.ShowModal()
+        else:
+            inicio = bd.Ingresar(Usuario,Contrasena)
+
+            if not inicio:
+                self.MDError.SetMessage(Error[0])
+                self.MDError.ShowModal()
+            else:
+                self.Show(False)
+                self.IndexFrame.Show()
+
+
+    def Registrar(self,event):
+        Error = ["No pudo ser registrado, Este usuario ya existe","Debe llenar ambos campos"]
+        Usuario = self.TFUsuario.GetValue()
+        Contrasena = self.TFContrasena.GetValue()
+        
+
+        if Usuario == "" or Contrasena == "":
+            self.MDError.SetMessage(Error[1])
+            self.MDError.ShowModal()
+        else:
+            registro = bd.Registrar(Usuario,Contrasena)
+            if registro:
+                self.Show(False)
+                self.IndexFrame.Show()
+                
+            else:
+                self.MDError.SetMessage(Error[0])
+                self.MDError.ShowModal()
+
+class Index(wx.Frame):
+    def __init__(self, parent, id):
+        wx.Frame.__init__(self, parent, id, title=c.CAPTION_I, size=c.SIZE_I,
+                style = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
+
+        self.Bind(wx.EVT_CLOSE,self.Close)
+        self.IniciarInterfaz()
+
+    def IniciarInterfaz(self):
+        print("Index")
+        
+    def Close(self,event):
+        self.Show(False)
+        MainFrame.Show()
+        
+
 
   
 
@@ -46,7 +110,7 @@ class Login(wx.Frame):
 
 if __name__=="__main__":
     app = wx.App()
-    frame = Login(None, -1)
-    frame.Show()
+    MainFrame = Login(None, -1)
+    MainFrame.Show()
 
     app.MainLoop()
