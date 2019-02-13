@@ -63,16 +63,27 @@ def Registrar(Usuario,Contrasena):
         return 0
 
 def Ingresar(Usuario, Contrasena):
-    return Usuarios.select().where(Usuarios.Cedula_Usuario == Usuario and Usuarios.Contrasena == Contrasena)
+    return Usuarios.select().where(Usuarios.Cedula_Usuario == Usuario, Usuarios.Contrasena == Contrasena)
 
+def CrearGrupo(Nombre,Materia,Usuario):
+    Grupos.create(Nombre = Nombre,Materia = Materia,Cedula_Usuario= Usuario)
 
+def ListarGrupos(Usuario):
+    grupos = Grupos.select().where(Grupos.Cedula_Usuario == Usuario)
+    gruposre =[]
+    for i in grupos:
+        gruposre.append(i.Nombre+" : "+i.Materia)
+    return gruposre
 
 if __name__=="__main__":
     #usuario1 = Usuarios.create(Cedula_Usuario=1234567890,Contrasena = 'qwerty')
     #Saulo.save()
     #Angel = Usuarios.create(124,123)
 
+    '''
     query = Usuarios.select()
     for i in query:
         print(i)
     print("Finalizo")
+    '''
+    #CrearGrupo("Grupo 2","Inteligencia Artificial",147852369)

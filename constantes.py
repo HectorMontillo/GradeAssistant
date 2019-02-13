@@ -8,5 +8,11 @@ CAPTION = "GradeAssistant: Login"
 ANCHO_I = 700
 ALTO_I = 600
 SIZE_I =(ANCHO_I,ALTO_I)
-CAPTION_I = "GradeAsistant: Index"
+CAPTION_I = "GradeAssistant: Index"
+
+#CrearGrupo
+ANCHO_CG = 500
+ALTO_CG = 300
+SIZE_CG = (ANCHO_CG,ALTO_CG)
+CAPTION_CG = "GradeAssistant: Crear Grupo"
 

@@ -1,6 +1,8 @@
 import speech_recognition as sr
 import bd 
-
+from gtts import gTTS
+import vlc
+p = vlc.MediaPlayer("audio.mp3")
 def recognize_speech_from_mic(recognizer, microphone):
     """Transcribe la voz tomada desde el microfono.
 
@@ -38,11 +40,18 @@ def recognize_speech_from_mic(recognizer, microphone):
 
     return response
 
+def text_to_speech(content, lang):
+    '''
+    tts = gTTS(text=content, lang=lang)
+    tts.save("audio.mp3")
+    '''
+    p.play()
 
+    
 
 
 if __name__=="__main__":
-    
+    '''
     r = sr.Recognizer()
     mic = sr.Microphone()
 
@@ -56,3 +65,6 @@ if __name__=="__main__":
                 print("You said: "+prueba["transcription"])
         else:
             print("I dont understand")
+    '''
+    
+    text_to_speech("Hola que tal te odio perrita","es")
