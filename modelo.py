@@ -1,53 +1,79 @@
 import speech_recognition as sr
 import bd 
-from gtts import gTTS
-import vlc
-p = vlc.MediaPlayer("audio.mp3")
-def recognize_speech_from_mic(recognizer, microphone):
-    """Transcribe la voz tomada desde el microfono.
 
-    Retorna un diccionario con las siguientes tres claves:
+class Recognizer_From_Mic():
+    def __init__(self):
+        self.r = sr.Recognizer()
+        self.mic = sr.Microphone()
 
-    "success":          Un Booleano que indica si la respuesta de la API fue satisfactoria.
-    "error":            Contiene el mesaje de error, este es None si no ocurrió ningun error.
-    "transcription":    Contiene el texto transcrito, este es None si no pudo ser transcrito.
-    """
+    def recognize_speech_from_mic(self, time_limit):
+        """Transcribe la voz tomada desde el microfono.
 
-    # Toma el audio desde el microfono en un intervalo de 5 segundos, teniendo en cuenta el ruido de ambiente
-    with microphone as source:
-        recognizer.adjust_for_ambient_noise(source)
-        audio = recognizer.listen(source,phrase_time_limit=5)
+        Retorna un diccionario con las siguientes tres claves:
+
+        "success":          Un Booleano que indica si la respuesta de la API fue satisfactoria.
+        "error":            Contiene el mesaje de error, este es None si no ocurrió ningun error.
+        "transcription":    Contiene el texto transcrito, este es None si no pudo ser transcrito.
+        """
+
+        # Toma el audio desde el microfono en un intervalo de 5 segundos, teniendo en cuenta el ruido de ambiente
+        with self.mic as source:
+            self.r.adjust_for_ambient_noise(source)
+            audio = self.r.listen(source,phrase_time_limit=time_limit)
+
+        # Diccionario que es retornado como respuesta
+        response = {
+            "success": True,
+            "error": None,
+            "transcription": None
+        }
+
+        #Se utiliza la API de google para pasar de la voz tomada desde el microfono a texto
         print("Reconociendo")
+        try:
+            response["transcription"] = self.r.recognize_google(audio, language='es-CO')
+        except sr.RequestError:
+            # La API no responde
+            response["success"] = False
+            response["error"] = "API no disponible"
+        except sr.UnknownValueError:
+            # No se logro reconocer la que se dijo
+            response["error"] = "Imposible reconocer lo que quiere decir"
 
-    # Diccionario que es retornado como respuesta
-    response = {
-        "success": True,
-        "error": None,
-        "transcription": None
-    }
-
-    #Se utiliza la API de google para pasar de la voz tomada desde el microfono a texto
-    print("Reconociendo")
-    try:
-        response["transcription"] = recognizer.recognize_google(audio, language='es-CO')
-    except sr.RequestError:
-        # La API no responde
-        response["success"] = False
-        response["error"] = "API no disponible"
-    except sr.UnknownValueError:
-        # No se logro reconocer la que se dijo
-        response["error"] = "Imposible reconocer lo que quiere decir"
-
-    return response
-
-def text_to_speech(content, lang):
-    '''
-    tts = gTTS(text=content, lang=lang)
-    tts.save("audio.mp3")
-    '''
-    p.play()
-
+        return response
     
+    def recognize_infinite(self,time_limit):
+        while(True):
+            print("Say Something!")
+            prueba = self.recognize_speech_from_mic(time_limit)
+            if prueba["success"]:
+                if prueba["error"]:
+                    print(prueba["error"])
+                else:
+                    print("You said: "+prueba["transcription"])
+            else:
+                print("I dont understand")
+    
+    def recognize(self,time_limit):
+        print("Say Something!")
+        prueba = self.recognize_speech_from_mic(time_limit)
+        if prueba["success"]:
+            if prueba["error"]:
+                    print(prueba["error"])
+            else:
+                print("You said: "+prueba["transcription"])
+        else:
+            print("I dont understand")
+
+class NLP():
+    def __init__(self):
+        pass
+    def Text_To_Peewee(self):
+        pass
+    def Peewee_To_Text(self):
+        pass
+
+
 
 
 if __name__=="__main__":
@@ -66,5 +92,5 @@ if __name__=="__main__":
         else:
             print("I dont understand")
     '''
-    
-    text_to_speech("Hola que tal te odio perrita","es")
+    obj = Recognizer_From_Mic()
+    obj.recognize(7)
