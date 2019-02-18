@@ -22,8 +22,66 @@ ALTO_VG = 600
 SIZE_VG = (ANCHO_VG,ALTO_VG)
 CAPTION_VG = "GradeAssistant: Grupo"
 
-#Diccionarios de palabras
+#Diccionarios de palabras y preguntas
+querys = [
+    ["VI","ART","TABLA","CN","VALOR","CON","CM","VALOR"],
+    ["VI","TABLA","CN","VALOR","CON","CM","VALOR"]
+]
 tokens = {
+    "TABLA":{
+        "grupo":[
+            "grupo",
+            "bando",
+            "facción",
+            "tribu",
+            "legión",
+            "familia",
+            "comunidad",
+            "equipo",
+            "cuadrilla",
+            "pandilla",
+            "banda",
+            "conjunto",
+            "asosiación",
+            "orden",
+            "colectividad"
+        ],
+        "estudiante":[
+            "estudiante",
+            "bachiller",
+            "graduado",
+            "licenciado",
+            "docto",
+            "experto",
+            "entendido",
+            "alúmno",
+            "discípulo",
+            "pupilo",
+            "educando",
+            "escolar",
+            "colegial"
+        ],
+        "calificación":[
+            "calificación",
+            "nota",
+            "puntuación",
+            "evaluación",
+            "apreciación",
+            "valoración",
+            "aptitud",
+            "capacidad",
+            "valor",
+            "habilidad"
+        ],
+        "asistencia":[
+            "asistencia",
+            "precencia",
+            "comparecencia",
+            "concurrencia",
+            "concurso",
+            "falta"
+        ]
+    },
     "VI":[
         "crear",
         "agregar",
@@ -37,7 +95,7 @@ tokens = {
         "inventar",
         "producir",
         "hacer"
-    ]
+    ],
     "ART":[
         "uno",
         "un",
@@ -48,12 +106,58 @@ tokens = {
         "unas",
         "los",
         "las"
-    ]
+    ],
     "CON":[
         "para",
         "por",
         "con"
+    ],
+    "CN":[
+        "llamado",
+        "nombrado",
+        "etiquetado",
+        "citado",
+        "mencionado",
+        "denominado",
+        "nominado",
+        "proclamado",
+        "designado",
+        "ascendido",
+        "colocado"
+    ],
+    "CID":[
+        "cédula",
+        "identificacion",
+        "id",
+        "papel",
+        "ficha",
+        "documento",
+        "tarjeta",
+        "identidad",
+        "tarjeta identidad",
+        "cc",
+        "ti",
+        "credencial",
+        "carné",
+    ],
+    "CM":[
+        "materia",
+        "asignaruta",
+        "disciplina",
+        "tópico",
+        "disciplina",
     ]
+
 }
-tokens["CON"].extend()
+for cm in list(tokens["CM"]):
+    tokens["CM"].append(cm+"s")
+for cn in list(tokens["CN"]):
+    tokens["CN"].append(cn[:len(cn)-1]+"a")
+for cn in list(tokens["CN"]):
+    tokens["CN"].append(cn+"s")
+for c in list(tokens["CON"]):
+    for a in list(tokens["ART"]):
+        tokens["CON"].append(c+" "+a)
+
+print(tokens["CM"])
 
