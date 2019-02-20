@@ -88,7 +88,7 @@ words = [
     "hacer",
     "dar",
 
-    "uno",
+    
     "un",
     "una",
     "el",
@@ -138,11 +138,28 @@ words = [
 ]
 tokens = {
     "S":[
+        #crear un grupo llamado ?? para la mateira  ??
+        "VALOR VI ART TABLA CN TABLA VALOR CART CM VALOR",
+        "VI ART TABLA CN TABLA VALOR CART CM VALOR",
+        "VALOR VI ART TABLA CN VALOR CART CM VALOR",
         "VI ART TABLA CN VALOR CART CM VALOR",
-        "VI TABLA CN VALOR CON CM VALOR"
+        "VALOR VI ART TABLA CN CART VALOR CART CM VALOR",
+        "VI ART TABLA CN CART VALOR CART CM VALOR",
+        
+        #crear grupo llamado ?? para la materia ??
+        "VALOR VI TABLA CN VALOR CART CM VALOR",
+        "VI TABLA CN VALOR CART CM VALOR",
+        #crear una nota llamada  ?? para el grupo llamado  ??
+        "VALOR VI TABLA CN VALOR CART GRU CN VALOR",
+        "VI TABLA CN VALOR CART GRU CN VALOR"
+        
     ],
     "VALOR":[
-        "#none"
+        "'#NONE'",
+        "'#NONE' '#NONE' '#NONE' '#NONE' '#NONE'",
+        "'#NONE' '#NONE' '#NONE' '#NONE'",
+        "'#NONE' '#NONE' '#NONE'",
+        "'#NONE' '#NONE'",
     ],
     "CART":[
         "CON ART",
@@ -219,7 +236,6 @@ tokens = {
         "dar"
     ],
     "ART":[
-        "uno",
         "un",
         "una",
         "el",

@@ -82,33 +82,93 @@ class NLP():
         tokens = word_tokenize(text)
         for t in tokens:
             if t not in c.words:
-                text = text.replace(t,"#none")
+                text = text.replace(t,"#NONE")
         return text
     
     def Parser(self,fixtext):
         sentence = fixtext.split()
+        nonterminals = []
+        i=0
         for t in self.rd.parse(sentence):
-            return t.productions()[0].rhs()
+            while(i < len(t.productions())):
+                #print(t.productions())
+                nont = str(t.productions()[i].lhs())
+                if nont != "TABLA" and nont != "CART":
+                    nonterminals.append(str(t.productions()[i].lhs()))
+                i+=1
+        k=0
+        listnone = []
+        while(k<len(sentence)):
+            if sentence[k]=="#NONE":
+                y = k
+                while(y < len(sentence) and sentence[y]== "#NONE"):
+                    y+=1
+                listnone.append(y-k)
+                k=y
+                
+            else:
+                k+=1
+    
+
+        contador = 0
+        x=0
+        while(contador<len(listnone) and x < len(nonterminals)):
+            if nonterminals[x] == "VALOR":
+                for i in range(listnone[contador]):
+                    nonterminals.insert(x,"VALOR")
+                    x+=1
+                contador+=1
+            x+=1
+        
+                 
+        return nonterminals
                 
         
     def Text_To_Peewee(self,text,Usuario):
-        parse = self.Parser(self.Fixer(text))
+
+        fix = self.Fixer(text)
+        parse = self.Parser(fix)
+        print(fix)
+        print(parse)
+
         count = 0
         select = None
+
         textlist = text.split()
+        textlistfix = fix.split()
         params = dict()
-        for i in bd.listfunct:
-            #print(i)
-            for tag in parse:
-                tagstr = str(tag)
-                if tagstr in i:
-                    params[tagstr] = textlist[parse.index(tag)+1]
-                    count+=1
-            if count == i[-1]:
-                select = bd.listfunct.index(i)
-                break
-            count=0
-        bd.DoQuery(select,params,Usuario)
+
+        print("Obtenida del usuario :"+text)
+        print("Obtenida del fixer :"+fix)
+        print("Obtenida de la gramatica :"+str(parse))
+        if parse:
+            for i in bd.listfunct:
+                for tag in parse:
+                    tagstr = str(tag)
+                    #if tagstr == "CART" or tagstr == "TABLA":
+                    #    textlistfix.insert(parse.index(tag)-1,"none")
+                    if tagstr in i:
+                        if tagstr == "CN" or tagstr == "CM":
+                            params[tagstr] = ""
+                            ind = parse.index(tag)-1
+                            print(ind)
+                            while(ind < len(textlist) and (textlistfix[ind] == "#NONE" or parse[ind+2] == "GRU" or parse[ind+2] == "ART")):
+                                print(str(ind)+ ": "+textlist[ind])
+                                params[tagstr]+=(textlist[ind]+" ")
+                                ind+=1
+                        count+=1
+                print("count",count)
+                if count == i[-1]:
+
+                    select = bd.listfunct.index(i)
+                    break
+                count=0
+            print(params,select)
+            bd.DoQuery(select,params,Usuario)
+        else:
+            playsound("audios/errorpeticion.mp3")
+
+        
                 
     
 
@@ -122,7 +182,19 @@ class Text_To_Speech():
         playsound(file)
     
     def Saludo(self):
-        playsound('bienvenida.mp3')
+        playsound('audios/bienvenida.mp3')
+
+    def GrupoCreado(self):
+        playsound('audios/grupocreado.mp3')
+
+    def EstudianteCreado(self):
+        playsound('audios/estudiantecreado.mp3')
+
+    def CalificacionCreada(self):
+        playsound('audios/calificacioncreado.mp3')
+
+    def AsistenciaCreada(self):
+        playsound('audios/asistenciacreado.mp3')
 
 
 if __name__=="__main__":
@@ -144,5 +216,8 @@ if __name__=="__main__":
     obj = Recognizer_From_Mic()
     obj.recognize(7)
     '''
-    obj =NLP()
-    obj.Text_To_Peewee('crear un grupo llamado matemáticas para la materia matemáticas')
+    obj = NLP()
+    #parse = obj.Parser(obj.Fixer('quiero crear un grupo llamado grupos 1 para la materia matemáticas 4'))
+    #print(parse)
+    #parse = obj.Text_To_Peewee('me gustaria crear un grupo llamado  los dioses del olimpo para la materia algebra lineal 5',123)
+    parse = obj.Text_To_Peewee('me gustaría crear un grupo llamado grupo uno para la materia matemáticas',123)

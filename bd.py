@@ -149,12 +149,12 @@ def ListarAsistencias(ID_Grupo,ID_Estudiante):
        asisre.append("Clase: "+str(i.ID_Asistencia.Dia)+ ": "+str(i.Valor))
     return asisre
 
-listfunct =[["VI","CN","CM",3],["VI","TABLA","CN",3],[50],["VI","CN","CID",3]]
+listfunct =[["VI","GRU","CN","CM",4],["VI","CAL","CN",3],[50],["VI","EST","CN","CID",3]]
 
 def DoQuery(select, params,Usuario):
     if select == 0:
         CrearGrupo(params["CN"],params["CM"],Usuario)
-        playsound("bienvenida.mp3")
+        playsound("audios/grupocreado.mp3")
     elif select == 1:
         pass
 

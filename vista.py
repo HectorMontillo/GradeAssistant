@@ -153,8 +153,9 @@ class Index(wx.Frame):
         self.VistaGrupo = VistaGrupo(self,-1)
 
     def Voz(self,event):
-        respuesta = tspeech.recognize(7)
+        respuesta = tspeech.recognize(14)
         nlp.Text_To_Peewee(respuesta,self.Usuario)
+        self.ActulizarListaGrupos(self.Usuario)
 
     def Close(self,event):
         self.Show(False)
