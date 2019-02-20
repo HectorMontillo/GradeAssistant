@@ -1,5 +1,5 @@
 import peewee
-
+from playsound import playsound
 db = peewee.SqliteDatabase('Aplicacion.db')
 
 class Usuarios(peewee.Model):
@@ -82,9 +82,10 @@ def Registrar(Usuario,Contrasena):
 def Ingresar(Usuario, Contrasena):
     return Usuarios.select().where(Usuarios.Cedula_Usuario == Usuario, Usuarios.Contrasena == Contrasena)
 
+#FUNCT 0
 def CrearGrupo(Nombre,Materia,Usuario):
     Grupos.create(Nombre = Nombre,Materia = Materia,Cedula_Usuario= Usuario)
-
+#FUNCT 1
 def CrearNota(Nombre,Grupo):
     Calificaciones.create(Nombre = Nombre, ID_Grupo = Grupo)
     cali = Calificaciones.select().where(Calificaciones.Nombre == Nombre, Calificaciones.ID_Grupo == Grupo)
@@ -92,6 +93,7 @@ def CrearNota(Nombre,Grupo):
     for e in est:
         for c in cali:
             CalificacionesEstudiantes.create(ID_Estudiante = e.ID_Estudiante,ID_Calificaion = c.ID_Calificaion, Valor= 0.0)
+#FUNCT 2
 def CrearAsistencia(Dia,Grupo):
     Asistencias.create(Dia = Dia, ID_Grupo = Grupo)
     asis = Asistencias.select().where(Asistencias.Dia == Dia, Asistencias.ID_Grupo == Grupo)
@@ -99,7 +101,7 @@ def CrearAsistencia(Dia,Grupo):
     for e in est:
         for a in asis:
             AsistenciasEstudiantes.create(ID_Estudiante = e.ID_Estudiante,ID_Asistencia = a.ID_Asistencia)
-
+#FUNCT 3
 def AgregarEstudiante(Nombre,ID_Estudiante,ID_Grupo):
     est = Estudiantes.select().where(Estudiantes.ID_Estudiante == ID_Estudiante)
     cal = Calificaciones.select()
@@ -113,7 +115,7 @@ def AgregarEstudiante(Nombre,ID_Estudiante,ID_Grupo):
     GrupoEstudiante.create(ID_Estudiante = ID_Estudiante, ID_Grupo = ID_Grupo)
     
 
-
+#FUNCT 4
 def ListarGrupos(Usuario):
     grupos = Grupos.select().where(Grupos.Cedula_Usuario == Usuario)
     gruposre =[]
@@ -121,6 +123,7 @@ def ListarGrupos(Usuario):
         gruposre.append(str(i.ID_Grupo)+" "+i.Nombre+" : "+i.Materia)
     return gruposre
 
+#FUNCT 5
 def ListarEstudiantes(Grupo):
     ests = GrupoEstudiante.select().join(Estudiantes).where(GrupoEstudiante.ID_Grupo == Grupo).order_by(Estudiantes.Nombre)
     nombreestudiantes =[]
@@ -128,6 +131,7 @@ def ListarEstudiantes(Grupo):
         nombreestudiantes.append(str(i.ID_Estudiante)+" "+i.ID_Estudiante.Nombre)
     return nombreestudiantes
 
+#FUNCT 6
 def ListarCalificaciones(ID_Grupo,ID_Estudiante):
     cal = CalificacionesEstudiantes.select().join(Calificaciones).where(Calificaciones.ID_Calificaion == CalificacionesEstudiantes.ID_Calificaion,
                 CalificacionesEstudiantes.ID_Estudiante == ID_Estudiante,Calificaciones.ID_Grupo == ID_Grupo)
@@ -136,6 +140,7 @@ def ListarCalificaciones(ID_Grupo,ID_Estudiante):
        calre.append(i.ID_Calificaion.Nombre + ": "+str(i.Valor))
     return calre
 
+#FUNCT 7
 def ListarAsistencias(ID_Grupo,ID_Estudiante):
     asis = AsistenciasEstudiantes.select().join(Asistencias).where(Asistencias.ID_Asistencia == AsistenciasEstudiantes.ID_Asistencia,
                 AsistenciasEstudiantes.ID_Estudiante == ID_Estudiante,Asistencias.ID_Grupo == ID_Grupo)
@@ -143,6 +148,15 @@ def ListarAsistencias(ID_Grupo,ID_Estudiante):
     for i in asis:
        asisre.append("Clase: "+str(i.ID_Asistencia.Dia)+ ": "+str(i.Valor))
     return asisre
+
+listfunct =[["VI","CN","CM",3],["VI","TABLA","CN",3],[50],["VI","CN","CID",3]]
+
+def DoQuery(select, params,Usuario):
+    if select == 0:
+        CrearGrupo(params["CN"],params["CM"],Usuario)
+        playsound("bienvenida.mp3")
+    elif select == 1:
+        pass
 
 if __name__=="__main__":
     #usuario1 = Usuarios.create(Cedula_Usuario=1234567890,Contrasena = 'qwerty')

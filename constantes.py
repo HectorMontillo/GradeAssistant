@@ -26,6 +26,7 @@ SIZE_VG = (ANCHO_VG,ALTO_VG)
 CAPTION_VG = "GradeAssistant: Grupo"
 
 #Diccionarios de palabras y preguntas
+
 words = [
     "grupo",
     "bando",
@@ -85,6 +86,7 @@ words = [
     "inventar",
     "producir",
     "hacer",
+    "dar",
 
     "uno",
     "un",
@@ -141,6 +143,11 @@ tokens = {
     ],
     "VALOR":[
         "#none"
+    ],
+    "CART":[
+        "CON ART",
+        "ART",
+        "CON"
     ],
     "TABLA":{
         "GRU":[
@@ -208,7 +215,8 @@ tokens = {
         "elaborar",
         "inventar",
         "producir",
-        "hacer"
+        "hacer",
+        "dar"
     ],
     "ART":[
         "uno",
@@ -226,11 +234,6 @@ tokens = {
         "por",
         "con",
         "en"
-    ],
-    "CART":[
-        "ART CON",
-        "ART",
-        "CON"
     ],
     "CN":[
         "llamado",

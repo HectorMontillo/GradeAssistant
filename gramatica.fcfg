@@ -1,15 +1,15 @@
 % start S
 S -> VI ART TABLA CN VALOR CART CM VALOR | VI TABLA CN VALOR CON CM VALOR 
 VALOR -> '#none' 
+CART -> CON ART | ART | CON 
 TABLA -> GRU | EST | CAL | ASI 
 GRU -> 'grupo' | 'bando' | 'facción' | 'tribu' | 'legión' | 'familia' | 'comunidad' | 'equipo' | 'cuadrilla' | 'pandilla' | 'banda' | 'conjunto' | 'asosiación' | 'orden' | 'colectividad' 
 EST -> 'estudiante' | 'bachiller' | 'graduado' | 'licenciado' | 'docto' | 'experto' | 'entendido' | 'alúmno' | 'discípulo' | 'pupilo' | 'educando' | 'escolar' | 'colegial' 
 CAL -> 'calificación' | 'nota' | 'puntuación' | 'evaluación' | 'apreciación' | 'valoración' | 'aptitud' | 'capacidad' | 'valor' | 'habilidad' 
 ASI -> 'asistencia' | 'precencia' | 'comparecencia' | 'concurrencia' | 'concurso' | 'falta' 
-VI -> 'crear' | 'agregar' | 'asignar' | 'concebir' | 'establecer' | 'guardar' | 'instaurar' | 'formar' | 'elaborar' | 'inventar' | 'producir' | 'hacer' 
+VI -> 'crear' | 'agregar' | 'asignar' | 'concebir' | 'establecer' | 'guardar' | 'instaurar' | 'formar' | 'elaborar' | 'inventar' | 'producir' | 'hacer' | 'dar' 
 ART -> 'uno' | 'un' | 'una' | 'el' | 'la' | 'unos' | 'unas' | 'los' | 'las' 
 CON -> 'para' | 'por' | 'con' | 'en' 
-CART -> ART CON | ART | CON 
 CN -> 'llamado' | 'nombrado' | 'etiquetado' | 'citado' | 'mencionado' | 'denominado' | 'nominado' | 'proclamado' | 'designado' | 'ascendido' | 'colocado' | 'llamada' | 'nombrada' | 'etiquetada' | 'citada' | 'mencionada' | 'denominada' | 'nominada' | 'proclamada' | 'designada' | 'ascendida' | 'colocada' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' | 'disciplinas' 
 CID -> 'cédula' | 'identificacion' | 'id' | 'papel' | 'ficha' | 'documento' | 'tarjeta' | 'identidad' | 'tarjeta identidad' | 'cc' | 'ti' | 'credencial' | 'carné' 
 CM -> 'materia' | 'asignaruta' | 'disciplina' | 'tópico' | 'disciplina' | 'materias' | 'asignarutas' | 'disciplinas' | 'tópicos' | 'disciplinas' 

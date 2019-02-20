@@ -69,6 +69,7 @@ class Login(wx.Frame):
                 
             else:
                 #m.text_to_speech("Bienvenido a GradeAssistant",'es')
+                tts.Saludo()
                 self.Show(False)
                 self.IndexFrame.Show()
                 self.IndexFrame.Usuario = usu.Cedula_Usuario
@@ -152,8 +153,9 @@ class Index(wx.Frame):
         self.VistaGrupo = VistaGrupo(self,-1)
 
     def Voz(self,event):
-        tspeech.recognize(7)
-        
+        respuesta = tspeech.recognize(7)
+        nlp.Text_To_Peewee(respuesta,self.Usuario)
+
     def Close(self,event):
         self.Show(False)
         MainFrame.Show()
@@ -461,7 +463,14 @@ class CrearGrupo(wx.Frame):
 
 
 if __name__=="__main__":
+    #Speech to text
     tspeech = m.Recognizer_From_Mic()
+    #Text to speech
+    tts = m.Text_To_Speech()
+    #Text to peewee
+    nlp = m.NLP()
+
+
     app = wx.App()
     MainFrame = Login(None, -1)
     MainFrame.Show()
