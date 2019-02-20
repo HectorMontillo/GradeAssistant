@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 #Logeo
 ANCHO = 500
 ALTO = 300
@@ -23,13 +26,124 @@ SIZE_VG = (ANCHO_VG,ALTO_VG)
 CAPTION_VG = "GradeAssistant: Grupo"
 
 #Diccionarios de palabras y preguntas
-querys = [
-    ["VI","ART","TABLA","CN","VALOR","CON","CM","VALOR"],
-    ["VI","TABLA","CN","VALOR","CON","CM","VALOR"]
+words = [
+    "grupo",
+    "bando",
+    "facción",
+    "tribu",
+    "legión",
+    "familia",
+    "comunidad",
+    "equipo",
+    "cuadrilla",
+    "pandilla",
+    "banda",
+    "conjunto",
+    "asosiación",
+    "orden",
+    "colectividad",
+    "estudiante",
+    "bachiller",
+    "graduado",
+    "licenciado",
+    "docto",
+    "experto",
+    "entendido",
+    "alúmno",
+    "discípulo",
+    "pupilo",
+    "educando",
+    "escolar",
+    "colegial",
+
+    "calificación",
+    "nota",
+    "puntuación",
+    "evaluación",
+    "apreciación",
+    "valoración",
+    "aptitud",
+    "capacidad",
+    "valor",
+    "habilidad",
+    "asistencia",
+    "precencia",
+    "comparecencia",
+    "concurrencia",
+    "concurso",
+    "falta",
+
+    "crear",
+    "agregar",
+    "asignar",
+    "concebir",
+    "establecer",
+    "guardar",
+    "instaurar",
+    "formar",
+    "elaborar",
+    "inventar",
+    "producir",
+    "hacer",
+
+    "uno",
+    "un",
+    "una",
+    "el",
+    "la",
+    "unos",
+    "unas",
+    "los",
+    "las",
+
+    "para",
+    "por",
+    "con",
+    "en",
+
+    "llamado",
+    "nombrado",
+    "etiquetado",
+    "citado",
+    "mencionado",
+    "denominado",
+    "nominado",
+    "proclamado",
+    "designado",
+    "ascendido",
+    "colocado",
+
+    "cédula",
+    "identificacion",
+    "id",
+    "papel",
+    "ficha",
+    "documento",
+    "tarjeta",
+    "identidad",
+    "tarjeta identidad",
+    "cc",
+    "ti",
+    "credencial",
+    "carné",
+
+    "materia",
+    "asignaruta",
+    "disciplina",
+    "tópico",
+    "disciplina",
+
 ]
 tokens = {
+    "S":[
+        "VI ART TABLA CN VALOR CART CM VALOR",
+        "VI TABLA CN VALOR CON CM VALOR"
+    ],
+    "VALOR":[
+        "#none"
+    ],
     "TABLA":{
-        "grupo":[
+        "GRU":[
             "grupo",
             "bando",
             "facción",
@@ -46,7 +160,7 @@ tokens = {
             "orden",
             "colectividad"
         ],
-        "estudiante":[
+        "EST":[
             "estudiante",
             "bachiller",
             "graduado",
@@ -61,7 +175,7 @@ tokens = {
             "escolar",
             "colegial"
         ],
-        "calificación":[
+        "CAL":[
             "calificación",
             "nota",
             "puntuación",
@@ -73,7 +187,7 @@ tokens = {
             "valor",
             "habilidad"
         ],
-        "asistencia":[
+        "ASI":[
             "asistencia",
             "precencia",
             "comparecencia",
@@ -110,7 +224,13 @@ tokens = {
     "CON":[
         "para",
         "por",
-        "con"
+        "con",
+        "en"
+    ],
+    "CART":[
+        "ART CON",
+        "ART",
+        "CON"
     ],
     "CN":[
         "llamado",
@@ -149,15 +269,64 @@ tokens = {
     ]
 
 }
+#------------------------------------------------
+#Agregar prural a los tokens de tipo CampoMateria
 for cm in list(tokens["CM"]):
-    tokens["CM"].append(cm+"s")
+    word = cm+"s"
+    tokens["CM"].append(word)
+    words.append(word)
+#------------------------------------------------
+#Agregar femenino a los tokens del tipo CampoNombre
 for cn in list(tokens["CN"]):
-    tokens["CN"].append(cn[:len(cn)-1]+"a")
+    word = cn[:len(cn)-1]+"a"
+    tokens["CN"].append(word)
+    words.append(word)
+#------------------------------------------------
+#Agregar plural a los tokens del tipo CampoNombre
 for cn in list(tokens["CN"]):
-    tokens["CN"].append(cn+"s")
-for c in list(tokens["CON"]):
-    for a in list(tokens["ART"]):
-        tokens["CON"].append(c+" "+a)
+    word = cm+"s"
+    tokens["CN"].append(word)
+    words.append(word)
 
-print(tokens["CM"])
+#Funcion que genera archivo fcfg para la gramatica, a partir del diccionario tokens
+def FCFG_Generador():
+    f = open("gramatica.fcfg", 'w',encoding='utf-8')
+    gramatica = "% start S\n" 
+    for t in tokens:
+        gramatica += t+" -> "
+        for i in tokens[t]:
+            if i.islower():
+                gramatica += "'"+i+"' | "
+            else:
+                gramatica += i+" | "
+        gramatica = gramatica[:-2] + "\n"
+        if isinstance(tokens[t],dict):
+            for i in tokens[t]:
+                gramatica += i+" -> "
+                for j in tokens[t][i]:
+                    gramatica += "'"+j+"' | "
+                gramatica = gramatica[:-2] + "\n"
+    f.write(gramatica)
+    f.close()
 
+#se genera el archivo gramatica.fcfg y se abre como lectura
+FCFG_Generador()
+filegrammar = open("gramatica.fcfg","r")
+
+'''
+from nltk import CFG
+from nltk.parse import RecursiveDescentParser
+
+
+f = open("gramatica.fcfg","r")
+grammar = CFG.fromstring(f.read())
+f.close()
+rd = RecursiveDescentParser(grammar)
+#print(grammar._productions)
+sentence1 = 'crear un grupo llamado #none para materia #none'.split()
+for t in rd.parse(sentence1):
+    print(t.productions()[0].rhs())
+    #print(t.remove('S'))
+    #print("fila : "+str(t))
+
+'''

@@ -140,6 +140,9 @@ class Index(wx.Frame):
         #Botones----------------------------------------
         self.BtnCrearGrupo = wx.Button(panel, label="CrearGrupo", pos=(c.ANCHO_I-160,c.ALTO_I-128), size=(96, 32))
         self.Bind(wx.EVT_BUTTON, self.CrearGrupo, self.BtnCrearGrupo)
+
+        self.BtnVoz = wx.Button(panel, label="Comando voz", pos=(c.ANCHO_I-160,16), size=(96, 32))
+        self.Bind(wx.EVT_BUTTON, self.Voz, self.BtnVoz)
         '''
         self.BtnRegistrar = wx.Button(panel, label="Registrarse", pos=(c.ANCHO-272, 168), size=(96, 32))
         self.Bind(wx.EVT_BUTTON, self.Registrar, self.BtnRegistrar)
@@ -148,6 +151,9 @@ class Index(wx.Frame):
         self.CrearGrupoFrame = CrearGrupo(self,-1)
         self.VistaGrupo = VistaGrupo(self,-1)
 
+    def Voz(self,event):
+        tspeech.recognize(7)
+        
     def Close(self,event):
         self.Show(False)
         MainFrame.Show()
@@ -455,6 +461,7 @@ class CrearGrupo(wx.Frame):
 
 
 if __name__=="__main__":
+    tspeech = m.Recognizer_From_Mic()
     app = wx.App()
     MainFrame = Login(None, -1)
     MainFrame.Show()

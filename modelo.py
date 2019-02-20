@@ -1,5 +1,10 @@
 import speech_recognition as sr
 import bd 
+import constantes as c
+from nltk import word_tokenize
+from nltk import CFG
+from nltk.parse import RecursiveDescentParser
+
 
 class Recognizer_From_Mic():
     def __init__(self):
@@ -67,8 +72,24 @@ class Recognizer_From_Mic():
 
 class NLP():
     def __init__(self):
-        pass
-    def Text_To_Peewee(self):
+        self.Dict = c.tokens
+        self.grammar = CFG.fromstring(c.filegrammar.read())
+        self.rd = RecursiveDescentParser(self.grammar)
+
+    def Fixer(self,text):
+        tokens = word_tokenize(text)
+        for t in tokens:
+            if t not in c.words:
+                text = text.replace(t,"#none")
+        return text
+    
+    def Parser(self,fixtext):
+        sentence = fixtext.split()
+        for t in self.rd.parse(sentence):
+            print(t.productions()[0].rhs())
+                
+        
+    def Text_To_Peewee(self,text):
         pass
     def Peewee_To_Text(self):
         pass
@@ -91,6 +112,9 @@ if __name__=="__main__":
                 print("You said: "+prueba["transcription"])
         else:
             print("I dont understand")
-    '''
+    
     obj = Recognizer_From_Mic()
     obj.recognize(7)
+    '''
+    obj =NLP()
+    obj.Fixer('crear un grupo llamado grupo1 para materia matematicas')
